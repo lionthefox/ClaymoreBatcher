@@ -33,16 +33,41 @@ namespace ClaymoreBatcher
             AcceptButton = button1;
         }
 
+       // private static void AddButton(string rangeType, )
+
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             richTextBox1.Text = comboBox1.SelectedValue.ToString();
 
-            if (_parameters[comboBox1.SelectedIndex].Range == "Numbers")
+            if (_parameters[comboBox1.SelectedIndex].Range == null)
+            {
+                richTextBox2.Text = "A-Z & 0-9";
+            }
+
+            else if (_parameters[comboBox1.SelectedIndex].Range == "Numbers")
             {
                 richTextBox2.Text = "Any Number";
             }
+            else if (_parameters[comboBox1.SelectedIndex].Range.Contains("-"))
+            {
+                var range = _parameters[comboBox1.SelectedIndex].Range;
+                var minuses = range.LastIndexOf("-") - 1;
+                var result = "-" + range[1] + ", ";
 
-            else if (_parameters[comboBox1.SelectedIndex].Range != null)
+                for (var i = 2; i < minuses + 2; i = i + 2)
+                {
+                    result = result + range[i] + range[i + 1] + ", ";
+                }
+
+                for (var i = minuses + 3; i < range.Length - 1; i++)
+                {
+                    result = result + range[i] + ", ";
+                }
+
+                result = result + range[range.Length - 1];
+                richTextBox2.Text = result;
+            }
+            else
             {
                 var range = _parameters[comboBox1.SelectedIndex].Range;
                 var result = "";
@@ -54,10 +79,7 @@ namespace ClaymoreBatcher
                 result = result + range[range.Length - 1];
                 richTextBox2.Text = result;
             }
-            else
-            {
-                richTextBox2.Text = "A-Z & 0-9";
-            }
+
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -67,31 +89,34 @@ namespace ClaymoreBatcher
             const string header1 = "Forbidden Value";
             const string error1 = "Inserted Value not allowed!";
             var range = _parameters[comboBox1.SelectedIndex].Range;
-            if (string.IsNullOrEmpty(textBox1.Text)) MessageBox.Show(error, header);
+            if (string.IsNullOrEmpty(textBox1.Text))
+                MessageBox.Show(error, header);
             else if (range == null)
             {
-                string[] row = {comboBox1.SelectedItem.ToString(), textBox1.Text};
+                string[] row = { comboBox1.SelectedItem.ToString(), textBox1.Text };
                 var listViewItem = new ListViewItem(row);
                 listView1.Items.Add(listViewItem);
             }
-
-            else if (range == "Numbers") // HIER VERBESSERN
+            else if (range == "Numbers")
             {
                 var valid = textBox1.Text.All(char.IsDigit);
-
-                if(valid)
+                if (valid)
                 {
                     string[] row = { comboBox1.SelectedItem.ToString(), textBox1.Text };
                     var listViewItem = new ListViewItem(row);
                     listView1.Items.Add(listViewItem);
                 }
-
                 else
                 {
                     MessageBox.Show(error1, header1);
                 }
             }
 
+            else if (range.Contains("-"))
+            {
+
+                // ADD CODE  - - WRITE METHOD FOR ADDING
+            }
             else
             {
                 var listRange = new List<string>();
@@ -103,7 +128,7 @@ namespace ClaymoreBatcher
                 var valid = (listRange.Contains(textBox1.Text));
                 if (valid)
                 {
-                    string[] row = {comboBox1.SelectedItem.ToString(), textBox1.Text};
+                    string[] row = { comboBox1.SelectedItem.ToString(), textBox1.Text };
                     var listViewItem = new ListViewItem(row);
                     listView1.Items.Add(listViewItem);
                 }
@@ -127,14 +152,11 @@ namespace ClaymoreBatcher
                 "setx GPU_FORCE_64BIT_PTR 0", "setx GPU_MAX_HEAP_SIZE 100", "setx GPU_USE_SYNC_OBJECTS 1",
                 "setx GPU_MAX_ALLOC_PERCENT 100", "setx GPU_SINGLE_ALLOC_PERCENT 100"
             };
-
             var fs = new FileStream(NewPath == null ? Path + @"\StartMiner.bat" : NewPath + @"\StartMiner.bat",
                 FileMode.Create, FileAccess.Write);
             var sw = new StreamWriter(fs);
-            
             try
             {
-
                 foreach (var s in settings)
                 {
                     sw.WriteLine(s);
@@ -145,14 +167,11 @@ namespace ClaymoreBatcher
                 {
                     sw.WriteLine("-" + listView1.Items[i].Text + " " + listView1.Items[i].SubItems[1].Text);
                 }
-                
             }
-
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
             }
-
             finally
             {
                 sw.Close();
