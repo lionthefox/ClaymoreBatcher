@@ -54,6 +54,7 @@
     <Compile Include="Configurator.Designer.cs">
       <DependentUpon>Configurator.cs</DependentUpon>
     </Compile>
+    <Compile Include="FileCreator.cs" />
     <Compile Include="Parameter.cs" />
     <Compile Include="SelectFolder.cs">
       <SubType>Form</SubType>
@@ -63,6 +64,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RangeHandler.cs" />
     <EmbeddedResource Include="Configurator.resx">
       <DependentUpon>Configurator.cs</DependentUpon>
     </EmbeddedResource>
