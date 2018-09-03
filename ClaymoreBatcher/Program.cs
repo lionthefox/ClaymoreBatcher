@@ -13,7 +13,8 @@ namespace ClaymoreBatcher
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new SelectFolder());
+            var selectFolder = new SelectFolder();
+            Application.Run(selectFolder);
         }
     }
 }
